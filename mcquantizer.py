@@ -1,11 +1,6 @@
 import argparse
 import math
 import colorsys
-
-import cv2 as cv
-import glob
-
-
 import numpy as np
 from skimage.io import imread, imsave
 
@@ -37,15 +32,11 @@ def median_cut_quantize(img, img_arr):
     r_average = np.mean(img_arr[:, 0])
     g_average = np.mean(img_arr[:, 1])
     b_average = np.mean(img_arr[:, 2])
-
-    # print(f"\n\nColor #{color_index} \nColor_RGB: ({r_average:.0f},{g_average:.0f},{b_average:.0f})")
-    # convert_rgb_to_hsv(r_average, g_average, b_average)
-    # color_index += 1
-
+    
     for data in img_arr:
         sample_img[data[3]][data[4]] = [r_average, g_average, b_average]
-    print(
-        f"\n\nColor #{color_index} \nColor_RGB: ({r_average:.0f},{g_average:.0f},{b_average:.0f})")
+        
+    print(f"\n\nColor #{color_index} \nColor_RGB: ({r_average:.0f},{g_average:.0f},{b_average:.0f})")
     convert_rgb_to_hsv(r_average, g_average, b_average)
     color_index += 1
 
