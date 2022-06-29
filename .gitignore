@@ -2,3 +2,5 @@
 *.png
 *.tif
 *.jpg
+__pycache__
+*.txt

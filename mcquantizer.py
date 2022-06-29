@@ -4,8 +4,9 @@ import colorsys
 import numpy as np
 from skimage.io import imread, imsave
 
+color_index = 1
 
-def convert_rgb_to_hsv(red, green, blue):
+def convert_rgb_to_hsv(red, green, blue,file):
     # rgb normal: range (0-255, 0-255, 0.255)
 
     # get rgb percentage: range (0-1, 0-1, 0-1 )
@@ -23,7 +24,7 @@ def convert_rgb_to_hsv(red, green, blue):
     color_v = round(100*color_hsv_percentage[2])
     color_hsv = (color_h, color_s, color_v)
 
-    print('color_hsv: ', color_hsv)
+    print('color_hsv: ', color_hsv,file=file)
 
 
 def median_cut_quantize(img, img_arr):
@@ -34,20 +35,27 @@ def median_cut_quantize(img, img_arr):
     b_average = np.mean(img_arr[:, 2])
     
     for data in img_arr:
-        sample_img[data[3]][data[4]] = [r_average, g_average, b_average]
-        
-    print(f"\n\nColor #{color_index} \nColor_RGB: ({r_average:.0f},{g_average:.0f},{b_average:.0f})")
-    convert_rgb_to_hsv(r_average, g_average, b_average)
-    color_index += 1
+        img[data[3]][data[4]] = [r_average, g_average, b_average]
+    
+    # log the values to log.txt
+    with open('log.txt','a') as file:
+        print(f"Color #{color_index} \nColor_RGB: ({r_average:.0f},{g_average:.0f},{b_average:.0f})",file = file)
+        convert_rgb_to_hsv(r_average, g_average, b_average,file)
+    
+    color_index+=1
+    return img
 
-
+def quantize(img, img_arr,depth):
+    global color_index
+    split_into_buckets(img,img_arr,depth)
+    color_index = 1
+    
 def split_into_buckets(img, img_arr, depth):
     if len(img_arr) == 0:
-        return
+        return img
 
     if depth == 0:
-        median_cut_quantize(img, img_arr)
-        return
+        return median_cut_quantize(img, img_arr)
 
     r_range = np.max(img_arr[:, 0]) - np.min(img_arr[:, 0])
     g_range = np.max(img_arr[:, 1]) - np.min(img_arr[:, 1])
@@ -95,8 +103,11 @@ if __name__ == '__main__':
     # read the image
     sample_img = imread(input_path)
     
-    color_index = 1
-
+    # Clear log.txt file
+    with open('log.txt','a') as file:
+        file.seek(0)
+        file.truncate()
+        
     flattened_img_array = []
     for rindex, rows in enumerate(sample_img):
         for cindex, color in enumerate(rows):
