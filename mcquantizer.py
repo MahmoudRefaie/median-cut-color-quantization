@@ -3,6 +3,7 @@ import math
 import colorsys
 import numpy as np
 from skimage.io import imread, imsave
+import matplotlib
 
 color_index = 1
 
@@ -24,7 +25,11 @@ def convert_rgb_to_hsv(red, green, blue,file):
     color_v = round(100*color_hsv_percentage[2])
     color_hsv = (color_h, color_s, color_v)
 
+    #log the hsv value
     print('color_hsv: ', color_hsv,file=file)
+    
+    #log the hex value
+    print(matplotlib.colors.to_hex([ red_percentage, green_percentage, blue_percentage ]), file=file)
 
 
 def median_cut_quantize(img, img_arr):

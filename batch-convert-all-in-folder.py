@@ -47,4 +47,4 @@ if __name__ == '__main__':
         
 
         # save the final image
-        imsave(jpg_file_path[:-4]+"q.jpg", sample_img)
+        imsave("Q_" + jpg_file_path[:-4]+".jpg", sample_img)
